@@ -15,7 +15,10 @@ return new class extends Migration
             $table->text('keterangan')->nullable();
             $table->dateTime('waktu');
 
-            $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
+            // Sengaja tanpa foreign key: log audit harus tetap ada
+            // meskipun akun pengguna dihapus.
+            $table->index('username');
+            $table->index('waktu');
         });
     }
 

@@ -3,12 +3,11 @@
 @section('title', 'Dashboard Guru BK')
 
 @section('content')
-<div class="container-fluid px-4 py-4" style="background:#f4f6f9; min-height:100vh;">
+<div class="container-fluid px-4 py-4">
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="mb-0 fw-bold text-dark">Dashboard Guru BK</h3>
             <p class="text-muted mb-0">Ringkasan pelanggaran, pembinaan, dan tindak lanjut siswa {{ $namaBulan }} {{ $tahun }}</p>
         </div>
         <form method="GET" class="d-flex gap-2">

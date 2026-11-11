@@ -13,11 +13,10 @@ class DashboardBkController extends Controller
 {
     public function index(Request $request)
     {
-        // Bulan & tahun yang sedang ditampilkan (default: bulan ini)
+
         $bulan = $request->get('bulan', now()->month);
         $tahun = $request->get('tahun', now()->year);
 
-        // ==== KARTU STATISTIK ====
         $totalPelanggaranBulanIni = Pelanggaran::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->count();
@@ -32,7 +31,6 @@ class DashboardBkController extends Controller
             ->whereYear('tanggal_terbit', $tahun)
             ->count();
 
-        // ==== REKAP PELANGGARAN PER KATEGORI (bulan berjalan) ====
         $rekapKategori = Pelanggaran::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->join('jenis_pelanggaran', 'pelanggaran.kode_pelanggaran', '=', 'jenis_pelanggaran.kode_pelanggaran')
@@ -40,25 +38,21 @@ class DashboardBkController extends Controller
             ->groupBy('jenis_pelanggaran.kategori')
             ->pluck('jumlah', 'kategori');
 
-        // ==== DAFTAR PELANGGARAN TERBARU ====
         $pelanggaranTerbaru = Pelanggaran::with(['siswa', 'jenisPelanggaran', 'pencatat'])
             ->orderBy('tanggal', 'desc')
             ->take(5)
             ->get();
 
-        // ==== SISWA DENGAN STATUS SP (butuh perhatian) ====
         $siswaSp = Siswa::where('status_sp', '!=', 'normal')
             ->orderBy('total_poin_pelanggaran', 'desc')
             ->take(5)
             ->get();
 
-        // ==== CATATAN PEMBINAAN TERBARU ====
         $pembinaanTerbaru = Pembinaan::with(['siswa'])
             ->orderBy('tanggal', 'desc')
             ->take(5)
             ->get();
 
-        // Untuk dropdown filter bulan/tahun
         $namaBulan = Carbon::create()->month($bulan)->translatedFormat('F');
 
         return view('dashboard.bk', compact(

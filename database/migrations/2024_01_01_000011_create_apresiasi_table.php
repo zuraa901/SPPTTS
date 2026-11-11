@@ -14,11 +14,19 @@ return new class extends Migration
             $table->string('kode_apresiasi', 10);
             $table->string('nip_pemberi', 20);
             $table->date('tanggal');
+            $table->string('tahun_ajaran', 9);
+            $table->enum('semester', ['ganjil', 'genap']);
+            // Salinan poin saat diberikan (snapshot dari jenis_apresiasi).
+            $table->integer('poin');
             $table->text('catatan')->nullable();
+            $table->timestamps();
 
             $table->foreign('nisn')->references('nisn')->on('siswa')->onDelete('cascade');
             $table->foreign('kode_apresiasi')->references('kode_apresiasi')->on('jenis_apresiasi');
             $table->foreign('nip_pemberi')->references('nip')->on('guru');
+
+            $table->index(['nisn', 'tahun_ajaran', 'semester']);
+            $table->index('tanggal');
         });
     }
 
