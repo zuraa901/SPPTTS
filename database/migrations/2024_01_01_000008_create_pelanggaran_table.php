@@ -14,23 +14,12 @@ return new class extends Migration
             $table->string('kode_pelanggaran', 10);
             $table->string('nip_pencatat', 20);
             $table->date('tanggal');
-            $table->string('tahun_ajaran', 9);
-            $table->enum('semester', ['ganjil', 'genap']);
-            // Salinan poin saat dicatat, supaya riwayat tidak berubah
-            // jika bobot di jenis_pelanggaran diubah kemudian.
-            $table->integer('poin');
-            // Hanya pelanggaran 'terverifikasi' yang dihitung ke total poin siswa.
-            $table->enum('status', ['menunggu_verifikasi', 'terverifikasi', 'dalam_keberatan', 'dibatalkan'])
-                ->default('terverifikasi');
             $table->text('catatan')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('nisn')->references('nisn')->on('siswa')->onDelete('cascade');
             $table->foreign('kode_pelanggaran')->references('kode_pelanggaran')->on('jenis_pelanggaran');
             $table->foreign('nip_pencatat')->references('nip')->on('guru');
-
-            $table->index(['nisn', 'tahun_ajaran', 'semester']);
-            $table->index('tanggal');
         });
     }
 
